@@ -15,7 +15,7 @@ class ChatClient:
         while self.running:
             try:
                 message = self.server.recv(1024).decode()
-                if message == "Server is shutting down.":
+                if message == "server shutdown":
                     print("The server is shutting down. Disconnecting...")
                     self.running = False
                     self.server.close()
@@ -26,7 +26,7 @@ class ChatClient:
                 else:
                     self.running = False
             except Exception as e:
-                if self.running:  # Only print the error if the client is still running
+                if self.running:
                     print("An error occurred:", e)
                 self.running = False
 
@@ -65,6 +65,8 @@ class ChatClient:
         receive_thread = threading.Thread(target=self.receive_messages)
         receive_thread.start()
         self.send_messages()
+
+
 
 if __name__ == "__main__":
     #host = input("Enter server IP address: ")

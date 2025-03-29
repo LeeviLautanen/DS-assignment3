@@ -39,7 +39,6 @@ class ChatServer:
         self.running = True
 
     def broadcast(self, message, client):
-        print(self.clients.keys())
         if client.channel in self.channels:
             for nickname in self.channels[client.channel]:
                 self.clients[nickname].send(f"{client.nickname}: {message}")
@@ -134,12 +133,11 @@ class ChatServer:
                 # Notify all clients and close their sockets
                 for client in list(self.clients.values()):
                     try:
-                        client.send("Server is shutting down.")
+                        client.send("server shutdown")
                         client.close()
                     except Exception as e:
                         print(f"Error closing client socket: {e}")
 
-                # Stop the server
                 self.server_socket.close()
                 print("Server has been shut down.")
                 sys.exit(0)
@@ -149,8 +147,11 @@ class ChatServer:
             try:
                 client_socket, address = self.server_socket.accept()
                 threading.Thread(target=self.handle_client, args=(client_socket, address)).start()
-            except OSError:
-                break  # Break the loop if the server socket is closed
+            except Exception as e:
+                print(f"Error accepting client: {e}")
+                break
+
+
 
 if __name__ == "__main__":
     server = ChatServer()
