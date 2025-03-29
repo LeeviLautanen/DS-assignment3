@@ -58,7 +58,6 @@ class ChatClient:
                 self.running = False
                 self.server.close()
             else:
-                # Send the message to the server
                 self.server.send(message.encode())
 
     def run(self):
